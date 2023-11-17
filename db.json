@@ -1,0 +1,12 @@
+{
+  "animals": [
+    { "id": "1", "name": "Patron" },
+    {
+      "name": "Vasyl",
+      "age": 5,
+      "isVaccinated": true,
+      "gender": "male",
+      "suspicious": "cat"
+    }
+  ]
+}
