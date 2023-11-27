@@ -2,6 +2,7 @@ const express = require("express");
 const router = require("./routes");
 const assignRequestId = require("./middlewares/assignRequestId");
 const getLogger = require("./middlewares/logger");
+const handleError = require("./middlewares/handleError");
 
 const app = express();
 
@@ -18,13 +19,7 @@ app.get("/health", (req, res) => {
   res.json({ status: 200, message: "Server is running" });
 });
 
-app.use((err, req, res, next) => {
-  res.status(500).json({
-    status: 500,
-    message: "Something went wrong",
-    err,
-  });
-});
+app.use(handleError);
 
 const PORT = 5000;
 app.listen(PORT, () => {

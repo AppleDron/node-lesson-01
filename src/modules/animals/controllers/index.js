@@ -11,7 +11,7 @@ class AnimalController {
     res.json({ message: "Success", data: animals, status: 200 });
   };
 
-  getAnimalById = async (req, res) => {
+  getAnimalById = async (req, res, next) => {
     const { animalId } = req.params;
 
     const animal = await animalsService.getAnimalById(animalId);

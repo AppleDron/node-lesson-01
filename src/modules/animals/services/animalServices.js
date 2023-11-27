@@ -1,3 +1,4 @@
+const HttpError = require("../../common/models/HttpErrors");
 const Animal = require("../models/animal");
 const animalRepository = require("../repository/animalsRepository");
 
@@ -11,7 +12,11 @@ class AnimalService {
   }
 
   async getOneById(id) {
-    return await this.animalRepository.findObeById(id);
+    const animal = await this.animalRepository.findObeById(id);
+    if (!animal) {
+      throw new HttpError(404, "Animal is not found");
+    }
+    return animal;
   }
 
   async create(payload) {
