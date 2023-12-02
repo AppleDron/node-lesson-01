@@ -1,36 +1,79 @@
 const path = require("node:path");
 const fs = require("node:fs/promises");
+const Animal = require("../models/animal");
 
 class AnimalRepository {
-  dbPath = path.join(process.cwd(), "db.json");
+  async findAll(config) {
+    const { page, limit, isVaccinated, sortBy, order } = config;
+    const skip = (page - 1) * limit;
 
-  async readDB() {
-    const content = await fs.readFile(this.dbPath);
-    const entries = JSON.parse(content.toString());
-    return entries;
-  }
+    const animalQuery = Animal.find()
+      .where("deletedAt")
+      .equals(null)
+      .skip(skip)
+      .limit(limit);
 
-  async writeDB(db) {
-    const content = JSON.stringify(db);
-    await fs.writeFile(this.dbPath, content);
-  }
+    const countQuery = Animal.countDocuments().where("deletedAt").equals(null);
 
-  async findAll() {
-    const db = await this.readDB();
-    return db.animals;
+    if (isVaccinated) {
+      animalQuery.where("isVaccinated").equals(isVaccinated);
+      countQuery.where("isVaccinated").equals(isVaccinated);
+    }
+
+    if (sortBy) {
+      animalQuery.sort({
+        [sortBy]: order,
+      });
+    }
+
+    if (sortBy) {
+      animalQuery.where("age").gte(minAge);
+      countQuery.where("age").gte(minAge);
+    }
+
+    const animals = await animalQuery.exec();
+    const count = await countQuery.exec();
+    return { animals, count };
   }
 
   async findOneById(animalID) {
-    const db = await this.readDB();
-    const animal = db.animals.find(({ id }) => id === animalID);
+    const animal = await Animal.findById(animalID)
+      .where("deletedAt")
+      .equals(null);
     return animal;
   }
 
-  async create(animal) {
-    const db = await this.readDB();
-    db.animals.push(animal);
-    await this.writeDB(db);
+  async create(payload) {
+    const animal = new Animal(payload);
+    await animal.save();
+
     return animal;
+  }
+
+  async updateById(animalID, payload) {
+    const animal = await Animal.findById(animalID);
+
+    if (!animal) {
+      return;
+    }
+
+    const updatedAnimal = await Animal.findOneAndUpdate(animalID, payload, {
+      returnOriginal: false,
+    });
+    return updatedAnimal;
+  }
+
+  async deleteById(animalID) {
+    const animal = Animal.findById(animalID);
+    if (!animal) {
+      return;
+    }
+
+    await Animal.findByIdAndUpdate(animalID, {
+      $set: {
+        deletedAt: new Date(),
+      },
+    });
   }
 }
 

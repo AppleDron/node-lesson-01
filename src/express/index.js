@@ -14,7 +14,7 @@ app.use(assignRequestId);
 
 app.use(getLogger());
 
-app.use(router);
+app.use("api/v1", router);
 
 app.get("/health", (req, res) => {
   res.json({ status: 200, message: "Server is running" });
