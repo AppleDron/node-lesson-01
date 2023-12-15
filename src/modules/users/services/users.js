@@ -5,25 +5,25 @@ class UserService {
     this.userRepository = usersRepository;
   }
 
-  async createUser(payload) {
+  createUser = async (payload) => {
     return await this.userRepository.create(payload);
-  }
+  };
 
-  async updateuserById(id, payload) {
+  updateuserById = async (id, payload) => {
     return await this.userRepository.updateById(id, payload);
-  }
+  };
 
-  async findByEmail(email) {
+  findByEmail = async (email) => {
     return await this.userRepository.findByEmail(email);
-  }
+  };
 
-  async findById(Id) {
+  findById = async (Id) => {
     return await this.userRepository.findById(Id);
-  }
+  };
 
-  async findUserByRefreshToken(token) {
+  findUserByRefreshToken = async (token) => {
     return await this.userRepository.findByEmail(token);
-  }
+  };
 }
 
 const userService = new UserService();

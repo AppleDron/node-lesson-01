@@ -17,7 +17,9 @@ class UsersRepository {
   }
 
   async updateById(id, payload) {
-    const user = await User.findByIdAndUpdate(id, payload);
+    const user = await User.findByIdAndUpdate(id, payload, {
+      returnOriginal: false,
+    });
     return user;
   }
 

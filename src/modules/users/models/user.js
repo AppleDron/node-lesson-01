@@ -6,6 +6,7 @@ const userSchema = new Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     refreshToken: { type: String },
+    avatarUrl: { type: String },
     role: { type: String, enum: ["guest", "admin"], default: "guest" },
     deletedAt: { type: Date, default: null },
   },

@@ -61,4 +61,4 @@ class AnimalController {
 
 const animalController = new AnimalController(animalsService);
 
-module.exports = animalController;
+module.exports = { animalController, AnimalController };
